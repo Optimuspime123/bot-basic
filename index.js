@@ -1,5 +1,5 @@
 const { Telegraf } = require('telegraf');
-const { fs } = require('fs');
+const fs = require('fs');
 
 // Replace YOUR_BOT_TOKEN with your bot's token
 const bot = new Telegraf('YOUR_BOT_TOKEN');
