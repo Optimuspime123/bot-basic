@@ -4,9 +4,15 @@ const fs = require('fs');
 // Replace YOUR_BOT_TOKEN with your bot's token
 const bot = new Telegraf('YOUR_BOT_TOKEN');
 
-// Initialize empty object to store filters for each user and global filters
-let filters = {};
-let globalFilters = {};
+filters = {}
+with open('filters.json', 'w') as outfile:
+    json.dump(filters, outfile)
+
+// Create global filters file
+global_filters = {}
+with open('global_filters.json', 'w') as outfile:
+    json.dump(global_filters, outfile)
+
 
 // Load filters from file, if it exists
 try {
