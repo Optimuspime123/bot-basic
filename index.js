@@ -11,8 +11,7 @@ try {
   filters = JSON.parse(fs.readFileSync('filters.json'));
 } catch (error) {
   console.log(error);
-  filters = {};
-  fs.writeFileSync('filters.json', '{}');
+  
 }
 
 // Initialize empty object to store global filters for each user
@@ -23,9 +22,7 @@ try {
   globalFilters = JSON.parse(fs.readFileSync('global_filters.json'));
 } catch (error) {
   console.log(error);
-  globalFilters = {};
-  fs.writeFileSync('global_filters.json', '{}');
-}
+  }
 
 bot.command('filter', (ctx) => {
   const userId = ctx.from.id;
