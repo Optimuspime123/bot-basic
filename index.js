@@ -4,22 +4,27 @@ const fs = require('fs');
 // Replace YOUR_BOT_TOKEN with your bot's token
 const bot = new Telegraf('YOUR_BOT_TOKEN');
 
-filters = {}
-with open('filters.json', 'w') as outfile:
-    json.dump(filters, outfile)
-
-// Create global filters file
-global_filters = {}
-with open('global_filters.json', 'w') as outfile:
-    json.dump(global_filters, outfile)
-
+let filters = {};
 
 // Load filters from file, if it exists
 try {
   filters = JSON.parse(fs.readFileSync('filters.json'));
+} catch (error) {
+  console.log(error);
+  filters = {};
+  fs.writeFileSync('filters.json', '{}');
+}
+
+// Initialize empty object to store global filters for each user
+let globalFilters = {};
+
+// Load global filters from file, if it exists
+try {
   globalFilters = JSON.parse(fs.readFileSync('global_filters.json'));
 } catch (error) {
   console.log(error);
+  globalFilters = {};
+  fs.writeFileSync('global_filters.json', '{}');
 }
 
 bot.command('filter', (ctx) => {
@@ -88,4 +93,3 @@ process.on('SIGINT', () => {
   fs.writeFileSync('global_filters.json', JSON.stringify(globalFilters));
   process.exit();
 });
-``
