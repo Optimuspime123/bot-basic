@@ -1,11 +1,17 @@
 {
   "name": "my-cool-telegram-bot",
   "version": "1.0.0",
-  "description": "A Telegram bot using Telegraf",
+  "description": "A JavaScript project",
+  "scripts": {
+    "build": "babel src --out-dir dist",
+    "start": "node index.js"
+  },
   "dependencies": {
     "telegraf": "^6.1.1"
   },
-  "scripts": {
-    "start": "node index.js"
+  "devDependencies": {
+    "@babel/cli": "^7.12.1",
+    "@babel/core": "^7.12.3",
+    "@babel/preset-env": "^7.12.1"
   }
 }
