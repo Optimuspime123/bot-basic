@@ -61,6 +61,26 @@ bot.command('gfilter', (ctx) => {
 
   ctx.reply(`Global filter added: "${response}"`);
 });
+bot.command('start', (ctx) => {
+  ctx.reply(`Welcome to my bot! Here are a list of commands you can use:
+
+- /help: Display this list of commands
+- /filter "phrase to filter" response 
+- /gfilter "phrase to filter " response 
+
+Have fun and remember gfilter is only for groups `);
+});
+
+bot.command('help', (ctx) => {
+  ctx.reply(`Welcome to my bot! Here are a list of commands you can use:
+
+- /help: Display this list of commands
+- /filter "phrase to filter" response 
+- /gfilter "phrase to filter " response 
+
+Have fun and remember gfilter is only for groups `);
+});
+
 
 bot.on('text', (ctx) => {
   const userId = ctx.from.id;
