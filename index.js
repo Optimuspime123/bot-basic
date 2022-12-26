@@ -1,15 +1,85 @@
 const { Telegraf } = require('telegraf');
+const { fs } = require('fs');
 
-const bot = new Telegraf(process.env.BOT_TOKEN);
+// Replace YOUR_BOT_TOKEN with your bot's token
+const bot = new Telegraf('YOUR_BOT_TOKEN');
 
-bot.start((ctx) => ctx.reply('Welcome to my Telegram bot! Why are you so stupid?'));
+// Initialize empty object to store filters for each user and global filters
+let filters = {};
+let globalFilters = {};
 
-bot.hears('good morning', (ctx) => ctx.reply('Good morning to you too!'));
+// Load filters from file, if it exists
+try {
+  filters = JSON.parse(fs.readFileSync('filters.json'));
+  globalFilters = JSON.parse(fs.readFileSync('global_filters.json'));
+} catch (error) {
+  console.log(error);
+}
 
-bot.hears('Thomas', (ctx) => ctx.reply('Mopitibat has read your message, you fool! Stop annoying him'));
+bot.command('filter', (ctx) => {
+  const userId = ctx.from.id;
+  const message = ctx.message.text;
+  const words = message.split(' ');
+  if (words.length < 3) {
+    ctx.reply('Invalid command. Please use the format "/filter phrase response"');
+    return;
+  }
 
-bot.hears('Fela', (ctx) => ctx.reply('Fela is a great guy , love him! '));
-bot.hears('SoSo', (ctx) => ctx.reply('Careful, that is my son you are talking about.'));
+  const phrase = words[1];
+  const response = words.slice(2).join(' ');
 
-bot.hears('Optimus', (ctx) => ctx.reply('Aye aye captain! '));
+  // Save the filter for the user
+  if (!filters[userId]) {
+    filters[userId] = {};
+  }
+  filters[userId][phrase] = response;
+
+  ctx.reply(`Filter added: "${phrase}" => "${response}"`);
+});
+
+bot.command('gfilter', (ctx) => {
+  const userId = ctx.from.id;
+  const message = ctx.message.text;
+  const words = message.split(' ');
+  if (words.length < 2) {
+    ctx.reply('Invalid command. Please use the format "/gfilter response"');
+    return;
+  }
+
+  const response = words.slice(1).join(' ');
+
+  // Save the global filter for the user
+  globalFilters[userId] = response;
+
+  ctx.reply(`Global filter added: "${response}"`);
+});
+
+bot.on('text', (ctx) => {
+  const userId = ctx.from.id;
+  const message = ctx.message.text;
+  if (!filters[userId] && !globalFilters[userId]) {
+    return;
+  }
+
+  // Check if the message matches any of the user's filters
+  for (const phrase in filters[userId]) {
+    if (message.includes(phrase)) {
+      ctx.reply(filters[userId][phrase]);
+    }
+  }
+
+  // Check if the message matches any of the user's global filters
+  if (globalFilters[userId]) {
+    ctx.reply(globalFilters[userId]);
+  }
+});
+
 bot.launch();
+
+// Save filters to file when the bot shuts down
+process.on('SIGINT', () => {
+  fs.writeFileSync('filters.json', JSON.stringify(filters));
+  fs.writeFileSync('global_filters.json', JSON.stringify(globalFilters));
+  process.exit();
+});
+``
