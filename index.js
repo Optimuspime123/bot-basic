@@ -84,12 +84,13 @@ Have fun and remember gfilter is only for groups `);
 bot.command('stop', (ctx) => {
   ctx.reply('Enter the text of the filter to delete:');
   // Use the state to store the current action
+  ctx.session = ctx.session || {};
   ctx.session.action = 'stop';
 });
 
 bot.on('message', (ctx) => {
   const userId = ctx.from.id;
-  if (ctx.session.action === 'stop') {
+  if (ctx.session && ctx.session.action === 'stop') {
     // Check if the user has a filter with the specified text
     let filterFound = false;
     for (const phrase in filters[userId]) {
