@@ -106,7 +106,12 @@ if (!filters[userId] && !globalFilters[userId]) {
   if (globalFilters[userId]) {
     ctx.reply(globalFilters[userId]);
   }
-});
+});// Define the ctx variable here
+const ctx = {
+  session: {
+    action: 'stop'
+  }
+};
 
   if (ctx.session && ctx.session.action === 'stop') {
     // Check if the user has a filter with the specified text
