@@ -90,6 +90,24 @@ bot.command('stop', (ctx) => {
 
 bot.on('message', (ctx) => {
   const userId = ctx.from.id;
+  const message = ctx.message.text;
+if (!filters[userId] && !globalFilters[userId]) {
+    return;
+  }
+
+  // Check if the message matches any of the user's filters
+  for (const phrase in filters[userId]) {
+    if (message.includes(phrase)) {
+      ctx.reply(filters[userId][phrase]);
+    }
+  }
+
+  // Check if the message matches any of the user's global filters
+  if (globalFilters[userId]) {
+    ctx.reply(globalFilters[userId]);
+  }
+});
+
   if (ctx.session && ctx.session.action === 'stop') {
     // Check if the user has a filter with the specified text
     let filterFound = false;
@@ -113,28 +131,8 @@ bot.on('message', (ctx) => {
     }
   }
 });
-
-
-
-bot.on('text', (ctx) => {
-  const userId = ctx.from.id;
-  const message = ctx.message.text;
-  if (!filters[userId] && !globalFilters[userId]) {
-    return;
-  }
-
-  // Check if the message matches any of the user's filters
-  for (const phrase in filters[userId]) {
-    if (message.includes(phrase)) {
-      ctx.reply(filters[userId][phrase]);
-    }
-  }
-
-  // Check if the message matches any of the user's global filters
-  if (globalFilters[userId]) {
-    ctx.reply(globalFilters[userId]);
-  }
-});
+  
+  
 
 bot.launch();
 
