@@ -128,8 +128,7 @@ if (!filters[userId] && !globalFilters[userId]) {
       ctx.reply('Filter deleted.');
     } else {
       ctx.reply('Filter not found.');
-    }
-  }
+   }
 });
   
   
