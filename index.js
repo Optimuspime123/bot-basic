@@ -81,6 +81,39 @@ bot.command('help', (ctx) => {
 Have fun and remember gfilter is only for groups `);
 });
 
+bot.command('stop', (ctx) => {
+  ctx.reply('Enter the text of the filter to delete:');
+  // Use the state to store the current action
+  ctx.session.action = 'stop';
+});
+
+bot.on('message', (ctx) => {
+  const userId = ctx.from.id;
+  if (ctx.session.action === 'stop') {
+    // Check if the user has a filter with the specified text
+    let filterFound = false;
+    for (const phrase in filters[userId]) {
+      if (phrase === ctx.message.text) {
+        filterFound = true;
+        delete filters[userId][phrase];
+        break;
+      }
+    }
+    // Check if the user has a global filter with the specified text
+    if (globalFilters[userId] === ctx.message.text) {
+      filterFound = true;
+      delete globalFilters[userId];
+    }
+    ctx.session.action = '';
+    if (filterFound) {
+      ctx.reply('Filter deleted.');
+    } else {
+      ctx.reply('Filter not found.');
+    }
+  }
+});
+
+
 
 bot.on('text', (ctx) => {
   const userId = ctx.from.id;
