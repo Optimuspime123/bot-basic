@@ -100,18 +100,11 @@ if (!filters[userId] && !globalFilters[userId]) {
     if (message.includes(phrase)) {
       ctx.reply(filters[userId][phrase]);
     }
-  }
-
-  // Check if the message matches any of the user's global filters
+}
   if (globalFilters[userId]) {
     ctx.reply(globalFilters[userId]);
   }
-});// Define the ctx variable here
-const ctx = {
-  session: {
-    action: 'stop'
-  }
-};
+}
 
   if (ctx.session && ctx.session.action === 'stop') {
     // Check if the user has a filter with the specified text
